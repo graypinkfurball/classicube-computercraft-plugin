@@ -2,3 +2,6 @@ classicube/
 obj/
 dynamic/
 
+*.so
+*.dll
+
