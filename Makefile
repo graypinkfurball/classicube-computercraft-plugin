@@ -22,7 +22,7 @@ default linux: linux64
 windows: windows64
 
 SUBGOALS := $(filter-out $(PLATGOALS),$(MAKECMDGOALS))
-LAST_SUBGOAL := $(word $(words $(SUBGOALS)),$(SUBGOALS))
+LAST_SUBGOAL := $(word $(words $(SUBGOALS) _),_ $(SUBGOALS))
 
 ifeq (clean,$(LAST_SUBGOAL))
   all: $(PLATS) ; $(RMDIR) $(OBJECT_DIR)
