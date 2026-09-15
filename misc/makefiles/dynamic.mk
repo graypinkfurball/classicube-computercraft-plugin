@@ -4,7 +4,7 @@ OBJ_SYMBOLS := $(DYNAMIC_DIR)/obj_symbols.txt
 DYNAMIC_HEADER := $(DYNAMIC_DIR)/dynamic.h
 DYNAMIC_SOURCE := $(DYNAMIC_DIR)/dynamic.c
 DYNAMIC_OBJECT := $(patsubst %.c,%.o,$(DYNAMIC_SOURCE))
-DYNAMIC_LOADER := $(MISC_DIR)/loader.c
+DYNAMIC_LOADER := $(MISC_DIR)/dynamic/loader.c
 
 CFLAGS += -I$(DYNAMIC_DIR) -DHAS_DYNAMIC_H
 
