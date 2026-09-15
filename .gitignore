@@ -1,6 +1,6 @@
-classicube/
-obj/
-dynamic/
+/classicube/
+/obj/
+/dynamic/
 
 *.so
 *.dll
