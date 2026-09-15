@@ -1,0 +1,46 @@
+CLASSICUBE := $(CLASSICUBE_DIR)/ClassiCube
+CC_SYMBOLS := $(DYNAMIC_DIR)/cc_symbols.txt
+OBJ_SYMBOLS := $(DYNAMIC_DIR)/obj_symbols.txt
+DYNAMIC_HEADER := $(DYNAMIC_DIR)/dynamic.h
+DYNAMIC_SOURCE := $(DYNAMIC_DIR)/dynamic.c
+DYNAMIC_OBJECT := $(patsubst %.c,%.o,$(DYNAMIC_SOURCE))
+DYNAMIC_LOADER := $(MISC_DIR)/loader.c
+
+CFLAGS += -I$(DYNAMIC_DIR) -DHAS_DYNAMIC_H
+
+build: $(DYNAMIC_DIR) $(DYNAMIC_HEADER) $(DYNAMIC_OBJECT) $(TARGET)
+
+$(TARGET): $(DYNAMIC_OBJECT)
+
+$(DYNAMIC_DIR):
+	$(MKDIR) $(DYNAMIC_DIR)
+
+$(DYNAMIC_HEADER): $(CC_SYMBOLS)
+	$(LUA) $(SCRIPT_DIR)/gendynh.lua $(CC_SYMBOLS) > $(DYNAMIC_HEADER)
+
+$(CC_SYMBOLS): $(CLASSICUBE)
+	$(NM) -jgDU $(CLASSICUBE) > $(CC_SYMBOLS)
+
+$(CLASSICUBE):
+	$(MAKE) -C $(CLASSICUBE_DIR) linux
+
+$(DYNAMIC_OBJECT): $(DYNAMIC_SOURCE) $(DYNAMIC_LOADER)
+	$(CC) -c $(DYNAMIC_LOADER) -o $@ $(CCFLAGS) $(CFLAGS)
+
+$(DYNAMIC_SOURCE): $(OBJ_SYMBOLS)
+	$(LUA) $(SCRIPT_DIR)/gendync.lua $(CC_SYMBOLS) $(OBJ_SYMBOLS) > $(DYNAMIC_SOURCE)
+
+$(OBJ_SYMBOLS): $(OBJECTS)
+	$(NM) -jgu $^ > $(OBJ_SYMBOLS)
+
+cleandyn:
+	$(RMDIR) $(DYNAMIC_DIR)
+
+cleandynobj:
+	$(RM) $(OBJ_SYMBOLS) $(DYNAMIC_SOURCE) $(DYNAMIC_OBJECT)
+
+clean: cleandyn
+cleanobj: cleandynobj
+
+.PHONY: cleandyn cleandynobj
+
