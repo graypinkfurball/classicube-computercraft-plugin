@@ -24,7 +24,7 @@ windows: windows64
 SUBGOALS := $(filter-out $(PLATGOALS),$(MAKECMDGOALS))
 LAST_SUBGOAL := $(word $(words $(SUBGOALS) _),_ $(SUBGOALS))
 
-ifeq (clean,$(patsubst cleanobj,clean,$(LAST_SUBGOAL)))
+ifneq (,$(filter clean cleanobj,$(LAST_SUBGOAL)))
   all: $(PLATS) ; $(RMDIR) $(OBJECT_DIR)
 else
   all: $(PLATS)
