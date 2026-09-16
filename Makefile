@@ -14,6 +14,7 @@ export MKDIR := mkdir -p
 export GIT := git
 export LUA := lua
 export NM := nm
+export NOOP := @:
 
 PLATS := linux32 linux64 windows32 windows64
 PLATGOALS := default linux windows all $(PLATS)
@@ -35,12 +36,9 @@ $(PLATS):
 
 ifeq (,$(filter $(PLATGOALS),$(MAKECMDGOALS)))
   build: default
-  clean: all
-  cleanobj: all
+  clean cleanobj: all
 else
-  build: ; @:
-  clean: ; @:
-  cleanobj: ; @:
+  build clean cleanobj: ; $(NOOP)
 endif
 
 .PHONY: $(PLATGOALS) build clean cleanobj

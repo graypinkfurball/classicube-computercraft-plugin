@@ -18,31 +18,38 @@ ifeq (windows,$(BASEPLAT))
   EXT := dll
 endif
 
+ifeq (macos,$(BASEPLAT))
+  EXT := dylib
+endif
+
 TARGET := $(NAME)_$(BASEPLAT)_$(PLATBIT).$(EXT)
 
 SOURCES := $(wildcard $(SOURCE_DIR)/*.c)
 OBJECTS := $(patsubst $(SOURCE_DIR)/%.c,$(OBJECT_DIR)/%.o,$(SOURCES))
 
 CCFLAGS := -pipe -fPIC
-CFLAGS := -I$(CLASSICUBE_DIR) -Wall -fvisibility=hidden -ffreestanding -fno-ident -O3 -g
+CFLAGS := -I$(CLASSICUBE_DIR) -Wall -fvisibility=hidden -ffreestanding -fno-ident -O3
 LDFLAGS := -nostdlib -s -shared
 
 ifeq (linux32,$(PLAT))
   CCFLAGS += -m32
 endif
 
-ifeq (windows32,$(PLAT))
-  CC := x86_64-w64-mingw32-gcc
-endif
-
-ifeq (windows64,$(PLAT))
-  CC := x86_64-w64-mingw32-gcc
-endif
-
 ifeq (windows,$(BASEPLAT))
   LDFLAGS += -Wl,--entry=0 -lkernel32
+  ifeq (32,$(PLATBIT))
+    CC := x86_64-w64-mingw32-gcc
+  endif
+  ifeq (64,$(PLATBIT))
+    CC := x86_64-w64-mingw32-gcc
+  endif
   USE_DYNAMIC := 1
 endif
+
+# look into zig for macos and other platforms
+#ifeq (macos,$(BASEPLAT))
+  
+#endif
 
 build: $(CLASSICUBE_DIR) $(OBJECT_DIR)
 
