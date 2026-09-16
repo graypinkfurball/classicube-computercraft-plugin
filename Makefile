@@ -3,7 +3,6 @@ export NAME := computercraft
 export SOURCE_DIR := src
 export MISC_DIR := misc
 export MAKEFILE_DIR := misc/makefiles
-export SCRIPT_DIR := misc/scripts
 export CLASSICUBE_DIR := classicube
 export OBJECT_DIR := obj
 export DYNAMIC_DIR := dynamic
@@ -25,7 +24,7 @@ windows: windows64
 SUBGOALS := $(filter-out $(PLATGOALS),$(MAKECMDGOALS))
 LAST_SUBGOAL := $(word $(words $(SUBGOALS) _),_ $(SUBGOALS))
 
-ifeq (clean,$(LAST_SUBGOAL))
+ifeq (clean,$(patsubst cleanobj,clean,$(LAST_SUBGOAL)))
   all: $(PLATS) ; $(RMDIR) $(OBJECT_DIR)
 else
   all: $(PLATS)

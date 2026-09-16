@@ -5,9 +5,9 @@
 #ifdef HAS_DYNAMIC_H
   #undef CC_VAR
   #undef CC_API
-
   #define CC_VAR
   #define CC_API extern
+
   #include "dynamic.h"
 
   void LoadSymbols(void);

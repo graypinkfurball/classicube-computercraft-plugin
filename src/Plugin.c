@@ -43,7 +43,7 @@ static int parseHex(char ch) {
   if (ch >= 'a' && ch <= 'f') { return ch - 'a' + 10; }
   return -1;
 }
-  
+
 static cc_bool validateHexStr(const char *p, int len) {
   for (int i = 0; i < len; i++) { if (parseHex(*p++) == -1) { return false; } }
   return true;
