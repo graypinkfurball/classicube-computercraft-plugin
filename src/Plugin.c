@@ -10,6 +10,8 @@
 // for Mem_TryAlloc, Mem_Free
 #include "src/Platform.h"
 
+#define PLUGIN_VERSION "v0.14.0"
+
 // OMG: Remember LocalPlayer VTable Render Hook trick
 
 static struct TerminalBuffer buffer = { 0, 0, NULL };
@@ -112,10 +114,11 @@ static void Plugin_Init(void) {
   Commands_Register(&TShow_Command);
   Commands_Register(&TResize_Command);
   Commands_Register(&TBlit_Command);
+  
   Textures_Init();
   InitBuffer(51,19);
-
-  Chat_Add1("Computercraft Plugin Loaded >:3 v0.13", NULL);
+  
+  Chat_Add1("Loaded Computercraft " PLUGIN_VERSION, NULL);
 }
 
 static void Plugin_Free(void) {

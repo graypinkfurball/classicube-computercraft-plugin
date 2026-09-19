@@ -55,9 +55,9 @@ build: $(CLASSICUBE_DIR) $(OBJECT_DIR)
 
 ifeq (1,$(USE_DYNAMIC))
   include $(MAKEFILE_DIR)/dynamic.mk
-else
-  build: $(TARGET)
 endif
+
+build: $(TARGET)
 
 $(CLASSICUBE_DIR):
 	$(GIT) clone --depth 1 https://github.com/ClassiCube/ClassiCube.git $(CLASSICUBE_DIR)
