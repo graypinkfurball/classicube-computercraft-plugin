@@ -1,44 +1,42 @@
-export NAME := computercraft
+NAME := computercraft
 
-export SOURCE_DIR := src
-export MISC_DIR := misc
-export MAKEFILE_DIR := misc/makefiles
-export CLASSICUBE_DIR := classicube
-export OBJECT_DIR := obj
-export DYNAMIC_DIR := dynamic
+GIT := git
+MKDIR := mkdir -p
+RMDIR := rm -rf
 
-export RM := rm -f
-export RMDIR := rm -rf
-export MKDIR := mkdir -p
-export GIT := git
-export LUA := lua
-export NM := nm
-export NOOP := @:
+SOURCE_DIR := src
+OBJECT_DIR := obj
+CLASSICUBE_DIR := classicube
 
-PLATS := linux32 linux64 windows32 windows64
-PLATGOALS := default linux windows all $(PLATS)
+SOURCES := $(wildcard $(SOURCE_DIR)/*.c)
+OBJECTS := $(patsubst $(SOURCE_DIR)/%.c,$(OBJECT_DIR)/%.o,$(SOURCES))
+TARGET := $(NAME)_linux_64.so
 
-default linux: linux64
-windows: windows64
+CFLAGS := -pipe -ffreestanding -fno-ident -fPIC -fvisibility=hidden -Wall -O3 -I$(CLASSICUBE_DIR)
+LDFLAGS := -pipe -nostdlib -fPIC -s -shared
 
-SUBGOALS := $(filter-out $(PLATGOALS),$(MAKECMDGOALS))
-LAST_SUBGOAL := $(word $(words $(SUBGOALS) _),_ $(SUBGOALS))
+build: $(CLASSICUBE_DIR) $(OBJECT_DIR) $(TARGET)
 
-ifneq (,$(filter clean cleanobj,$(LAST_SUBGOAL)))
-  all: $(PLATS) ; $(RMDIR) $(OBJECT_DIR)
-else
-  all: $(PLATS)
-endif
+$(CLASSICUBE_DIR):
+	$(GIT) clone --depth 1 https://github.com/ClassiCube/ClassiCube.git $(CLASSICUBE_DIR)
 
-$(PLATS):
-	@$(MAKE) --no-print-directory -f $(MAKEFILE_DIR)/build.mk "PLAT=$@" $(SUBGOALS)
+$(OBJECT_DIR):
+	$(MKDIR) $(OBJECT_DIR)
 
-ifeq (,$(filter $(PLATGOALS),$(MAKECMDGOALS)))
-  build: default
-  clean cleanobj: all
-else
-  build clean cleanobj: ; $(NOOP)
-endif
+$(TARGET): $(OBJECTS)
+	$(CC) $^ -o $@ $(LDFLAGS)
 
-.PHONY: $(PLATGOALS) build clean cleanobj
+$(OBJECT_DIR)/%.o: $(SOURCE_DIR)/%.c
+	$(CC) -c $< -o $@ $(CFLAGS)
+
+cleandist: clean
+	$(RMDIR) $(CLASSICUBE_DIR)
+
+clean: cleanobj
+	$(RM) $(TARGET)
+
+cleanobj:
+	$(RMDIR) $(OBJECT_DIR)
+
+.PHONY: build cleandist clean cleanobj
 
