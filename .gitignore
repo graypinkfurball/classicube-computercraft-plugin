@@ -1,9 +1,7 @@
 /assets/
 /classicube/
 /obj/
-/dynamic/
 
 *.so
 *.dll
 
-_*.txt
